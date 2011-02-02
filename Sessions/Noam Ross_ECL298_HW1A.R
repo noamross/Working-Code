@@ -1,3 +1,5 @@
+#
+
 rm(list=ls()) #clear workspace
 
 #set parameters
@@ -7,7 +9,7 @@ d = 0.04 #dispersal coefficient
 p = 2 #number of patches
 #N0 = runif(p)*10 #initial conditions
 tf = 500 #number of time steps
-N0s = seq(0,lambda/exp(1),length.out=100) #vector of initial conditions to test
+N0s = seq(0,lambda/exp(1),length.out=400) #vector of initial conditions to test
 
 
 #create dispersal matrix
@@ -35,4 +37,10 @@ for(k in 1:length(N0s)) {
     }
   }
 
-image(N0s,N0s,log(abs(final.Ns[,,1] - final.Ns[,,2])))
+save(final.Ns, file="Data/HastingsModelOut.rdata")
+image(N0s,N0s,log(abs(final.Ns[,,1] - final.Ns[,,2])), col=rainbow(256),
+      xlab="Initial Population at Patch 1",
+      ylab="Inital Population at Patch 2",
+      main="Log Population Differences of Two Patches following Hastings 1990")
+      
+
