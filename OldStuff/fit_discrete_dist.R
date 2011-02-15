@@ -38,6 +38,7 @@ nbiguess = c(prob=nbprobguess, size=nbsizeguess) #list of initial guesses for fi
 nbinomrun = fitdiscdist(data,dnbinom,nbiguess) #fit the data to a negative binomial distribution
 poisrun = fitdiscdist(data,dpois,mean(data)) #fit the data to a poisson distribution
 
+#Plot data
 hist(data,n=24,col="red",freq=FALSE, main="Poisson and Negative Binomial Fits to SARS Data",
      xlab="Number of Infections",ylab="Proportion of Cases")
 pys = dpois(0:33,lambda=poisrun$par)
@@ -48,4 +49,3 @@ lines(xs,dnys,col="blue",lwd=2)
 legend(15,0.6,c(paste("Poisson (AIC = ",round(poisrun$AIC,2),")"),
        paste("Neg-Binom (AIC = ",round(nbinomrun$AIC,2),")")), col=c("green","blue"), 
        lty=c(1,1))
-       
