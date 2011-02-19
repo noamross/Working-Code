@@ -18,7 +18,7 @@ lambda = as + js*f/2 #create demographic multiplier
 
 #parameters
 tf = 100 #set number of time steps
-runs = 500 #set number of repeats
+runs = 5000 #set number of repeats
 N0 = 100 #set initial population level
 nestingsites = 26 #max number of nexting pairs
 exthreshold = 1 #quasi-extinction threshold
@@ -41,7 +41,7 @@ hist(log(N[tf,]), freq=FALSE, col="red", xlab="Log of Final Population",   #crea
      ylab="Frequency", main=paste("Final Populations from ",runs," runs", sep="")) 
 gaussxs = seq(min(log(N[tf,])), max(log(N[tf,])), length.out=100)  #calculate gaussian from output data
 gaussysmeasured = dnorm(gaussxs, mean(log(N[tf,])), sd(log(N[tf,])))
-gaussyspredicted = dnorm(gaussxs, mean(log(lambda)), sd(log(lambda)))
+gaussyspredicted = dnorm(gaussxs, tf*mean(log(lambda))+log(N0), sqrt(var(log(lambda))*tf))
 lines(gaussxs,gaussysmeasured, col="blue")
 lines(gaussxs,gaussyspredicted, col="green")
 legend("topleft",c("Measured", "Calculated"), lty=c(1,1), col=c("blue","green"))

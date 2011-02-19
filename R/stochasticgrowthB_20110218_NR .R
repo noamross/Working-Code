@@ -17,9 +17,9 @@ lambda = as + js*f/2 #create demographic multiplier
 #acf(lambda) #shows autocorrelation by different lag times
 
 #parameters
-tf = 100 #set number of time steps
-runs = 500 #set number of repeats
-N0 = 100 #set initial population level
+tf = 300 #set number of time steps
+runs = 5000 #set number of repeats
+N0 = 26 #set initial population level
 nestingsites = 26 #max number of nexting pairs
 exthreshold = 1 #quasi-extinction threshold
 
@@ -28,23 +28,24 @@ N = matrix(0, tf, runs) #create data space
 N[1,] = rep(N0,runs) #set inital conditions of all runs to N0
 
 for(i in 2:tf) {  #run simulation
-    N[i,] = sample(lambda, runs, replace=TRUE)*N[i-1,]
-#  temp = pmin(sample(lambda, runs, replace=TRUE)*N[i-1,], nestingsites)
-#  temp[which(temp<exthreshold)] = 0
-#  N[i,] = temp
-# N[i,] = pmin(sample(lambda, runs, replace=TRUE)*N[i-1,], nestingsites) #adds ceiling to population
+#    N[i,] = sample(lambda, runs, replace=TRUE)*N[i-1,]
+   temp = pmin(sample(lambda, runs, replace=TRUE)*N[i-1,], nestingsites) #adds ceiling to population
+   temp[which(temp<exthreshold)] = 0 #causes values under the extinction threshold to go to zero
+   N[i,] = temp
+#   N[i,] = pmin(sample(lambda, runs, replace=TRUE)*N[i-1,], nestingsites) 
 
  
 }
 #par(mfrow=c(1,2))
-hist(log(N[tf,]), freq=FALSE, col="red", xlab="Log of Final Population",   #create histogram of final values
-     ylab="Frequency", main=paste("Final Populations from ",runs," runs", sep="")) 
-gaussxs = seq(min(log(N[tf,])), max(log(N[tf,])), length.out=100)  #calculate gaussian from output data
-gaussysmeasured = dnorm(gaussxs, mean(log(N[tf,])), sd(log(N[tf,])))
-gaussyspredicted = dnorm(gaussxs, mean(log(lambda)), sd(log(lambda)))
-lines(gaussxs,gaussysmeasured, col="blue")
-lines(gaussxs,gaussyspredicted, col="green")
-legend("topleft",c("Measured", "Calculated"), lty=c(1,1), col=c("blue","green"))
+extinctiontimes = colSums(sign(N))  #caclulate extinction times from population matrix
+hist(extinctiontimes, freq=FALSE, col="red", xlab="Extinction Times",   #create histogram of times
+     ylab="Frequency", main=paste("Extinction Times from ",runs," runs", sep="")) 
+#gaussxs = seq(min(log(N[tf,])), max(log(N[tf,])), length.out=100)  #calculate gaussian from output data
+#gaussysmeasured = dnorm(gaussxs, mean(log(N[tf,])), sd(log(N[tf,])))  #create a gaussian curve based on outputs
+#gaussyspredicted = dnorm(gaussxs, tf*mean(log(lambda))+log(N0), sqrt(var(log(lambda))*tf))  #created a gaussian curve based on parameters
+#lines(gaussxs,gaussysmeasured, col="blue") #plot output curve
+#lines(gaussxs,gaussyspredicted, col="green") #plot parameter curve
+#legend("topleft",c("Measured", "Calculated"), lty=c(1,1), col=c("blue","green")) #insert legend
 
 #matplot(N,type="l")
 #Assignment - implement code, plot histogram of log(N[tf,])
